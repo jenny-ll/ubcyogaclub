@@ -4,7 +4,7 @@
 
 This project is specially created for the UBC Yoga Club, but can also be extended
 for any small business. This application is made to help organize daily 
-operations for the club. The main users of this application would be UBC Yoga 
+operations revolving around yoga classes. The main users of this application would be UBC Yoga 
 Club executives and volunteers, including myself. 
 
 **Why was this created?**
@@ -17,5 +17,14 @@ customized features that would especially benefit our club.
 
 The key functionalities of this application include:
 - Updating and keeping track of memberships
-- Scheduling and modifying yoga classes and events on a calendar
+- Scheduling and modifying yoga classes on a calendar
 - Signing people in and keeping track of class attendances
+
+## User Stories
+
+- As a user, I want to be able to add a new member
+- As a user, I want to be able to view all of the memberships
+- As a user, I want to be able to schedule a yoga class to my calendar
+- As a user, I want to be able to sign-in somebody to a class and
+check if they're a member
+
