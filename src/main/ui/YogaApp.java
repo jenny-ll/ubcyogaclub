@@ -104,9 +104,20 @@ public class YogaApp {
     // MODIFIES: this
     // EFFECTS: views all student members
     private void doViewStudents() {
-        System.out.println("Here are all of our student members");
-
+        System.out.println("Here are all of our student members: "
+                + ourMembers.showStudentMembers());
     }
+
+    // MODIFIES: this
+    // EFFECTS: views all non-student members
+    private void doViewNonStudents() {
+        System.out.println("Here are all of our non-student members: "
+                + ourMembers.showNonStudentMembers());
+    }
+
+    // MODIFIES: this
+    // EFFECTS: changes email of member
+
 
 
 
