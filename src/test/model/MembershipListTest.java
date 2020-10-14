@@ -78,8 +78,15 @@ class MembershipListTest {
     @Test
     public void testDeleteId() {
         testMemberList.addMember(stuMemberJenny);
-        testMemberList.deleteMember(100020);
+        testMemberList.deleteMember(100024);
         assertEquals(0, testMemberList.size());
+    }
+
+    @Test
+    public void testFindMember() {
+        testMemberList.addMember(stuMemberJenny);
+        testMemberList.findMember(100008);
+        assertEquals("Jenny Liu", testMemberList.findMember(100008));
     }
 
 }

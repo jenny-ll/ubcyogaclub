@@ -56,4 +56,17 @@ public class MembershipList {
     public void deleteMember(int id) {
         members.removeIf(member -> (member.getId() == id));
     }
+
+    // REQUIRES: a member ID
+    // MODIFIES: this
+    // EFFECTS: gets the member name based on ID
+    public String findMember(int id) {
+        String correctName = "";
+        for (Member member : this.members) {
+            if (member.getId() == id) {
+                correctName = member.getName();
+            }
+        }
+        return correctName;
+    }
 }

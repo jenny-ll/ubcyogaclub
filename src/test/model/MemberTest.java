@@ -32,10 +32,4 @@ public class MemberTest {
         assertEquals(100000, stuMember.getId());
         assertEquals(100001, nonStuMember.getId());
     }
-
-    @Test
-    public void testSetEmail() {
-        stuMember.setEmail("jennyliu@gmail.com");
-        assertEquals("jennyliu@gmail.com", stuMember.getEmail());
-    }
 }

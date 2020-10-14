@@ -36,11 +36,4 @@ public class Member {
     public boolean isStudent() {
         return isStudent;
     }
-
-    // REQUIRES: e to be an email string
-    // MODIFIES: this
-    // EFFECTS: sets the email of this member to e
-    public void setEmail(String e) {
-        this.email = e;
-    }
 }
