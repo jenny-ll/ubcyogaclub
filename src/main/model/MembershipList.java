@@ -16,6 +16,11 @@ public class MembershipList {
         members = new ArrayList<>();
     }
 
+    // EFFECTS: returns size of list
+    public int size() {
+        return members.size();
+    }
+
     // REQUIRES: m != null
     // MODIFIES: this
     // EFFECTS: adds the Member m into the membership list
