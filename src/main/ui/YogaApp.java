@@ -1,15 +1,15 @@
-//package ui;
-//
-//import java.util.Scanner;
-//
-//// Yoga Member Application
-//// Source: parts of the Teller example
-//
-//import model.Member;
-//import model.MembershipList;
-//
-//public class YogaApp {
-//
+package ui;
+
+import java.util.Scanner;
+
+// Yoga Member Application
+// Source: parts of the Teller example
+
+import model.Member;
+import model.MembershipList;
+
+public class YogaApp { }
+
 //    private MembershipList ourMembers;
 //    private Member firstMember;
 //    private Scanner input;
@@ -117,14 +117,14 @@
 //
 //    // MODIFIES: this
 //    // EFFECTS: changes email of member
-
-
-
-
-
-
-
-
-
-
-}
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//}
