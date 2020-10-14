@@ -81,7 +81,5 @@ class MembershipListTest {
         testMemberList.deleteMember(100020);
         assertEquals(0, testMemberList.size());
     }
-    
-
 
 }
