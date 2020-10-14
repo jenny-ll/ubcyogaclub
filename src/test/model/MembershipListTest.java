@@ -57,7 +57,29 @@ class MembershipListTest {
         testMemberList.addMember(stuMemberJenny);
         testMemberList.addMember(stuMemberKathy);
         testMemberList.addMember(nonStuMemberAdam);
-        
+
+        List<Member> studentList = new ArrayList<>();
+        studentList.add(stuMemberJenny);
+        studentList.add(stuMemberKathy);
+        assertEquals(studentList, testMemberList.showStudentMembers());
+    }
+
+    @Test
+    public void testShowNonStudentMembers() {
+        testMemberList.addMember(stuMemberJenny);
+        testMemberList.addMember(stuMemberKathy);
+        testMemberList.addMember(nonStuMemberAdam);
+
+        List<Member> nonStudentList = new ArrayList<>();
+        nonStudentList.add(nonStuMemberAdam);
+        assertEquals(nonStudentList, testMemberList.showNonStudentMembers());
+    }
+
+    @Test
+    public void testDeleteId() {
+        testMemberList.addMember(stuMemberJenny);
+        testMemberList.deleteMember(100020);
+        assertEquals(0, testMemberList.size());
     }
     
 

@@ -30,6 +30,7 @@ public class MemberTest {
         assertEquals("adamjones@gmail.com", nonStuMember.getEmail());
         assertEquals(true, stuMember.isStudent());
         assertEquals(100000, stuMember.getId());
+        assertEquals(100001, nonStuMember.getId());
     }
 
     @Test
