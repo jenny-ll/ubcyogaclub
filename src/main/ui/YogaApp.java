@@ -8,7 +8,9 @@ import java.util.Scanner;
 import model.Member;
 import model.MembershipList;
 
-public class YogaApp { }
+public class YogaApp {
+
+}
 
 //    private MembershipList ourMembers;
 //    private Member firstMember;
