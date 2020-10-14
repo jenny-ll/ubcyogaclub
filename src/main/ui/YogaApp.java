@@ -1,6 +1,8 @@
 package ui;
 
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
 // Yoga Member Application
 // Source: parts of the Teller example
@@ -24,6 +26,8 @@ public class YogaApp {
     private void runYogaApp() {
         boolean keepGoing = true;
         String command = null;
+
+        init();
 
         while (keepGoing) {
             displayMenu();
@@ -86,7 +90,7 @@ public class YogaApp {
         String memberName = input.nextLine();
         System.out.print("Enter email of member: ");
         String memberEmail = input.nextLine();
-        System.out.print("Is member student? 1 for yes, anything else for no");
+        System.out.print("Is member student? 1 for yes, anything else for no: ");
         int memberIsStudentInput = input.nextInt();
 
         boolean memberIsStudent = true;
