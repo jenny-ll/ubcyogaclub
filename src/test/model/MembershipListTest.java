@@ -78,6 +78,7 @@ class MembershipListTest {
     @Test
     public void testDeleteIdSuccess() {
         testMemberList.addMember(stuMemberJenny);
+        assertEquals(1, testMemberList.size());
         testMemberList.deleteMember(100032);
         assertEquals(0, testMemberList.size());
     }
@@ -85,6 +86,7 @@ class MembershipListTest {
     @Test
     public void testDeleteIdFail() {
         testMemberList.addMember(stuMemberJenny);
+        assertEquals(1, testMemberList.size());
         testMemberList.deleteMember(100000);
         assertEquals(1, testMemberList.size());
     }
@@ -92,14 +94,12 @@ class MembershipListTest {
     @Test
     public void testFindMemberSuccess() {
         testMemberList.addMember(stuMemberJenny);
-        testMemberList.findMember(100028);
         assertEquals("Jenny Liu", testMemberList.findMember(100028));
     }
 
     @Test
     public void testFindMemberFail() {
         testMemberList.addMember(stuMemberJenny);
-        testMemberList.findMember(100007);
         assertEquals("", testMemberList.findMember(100007));
     }
 
