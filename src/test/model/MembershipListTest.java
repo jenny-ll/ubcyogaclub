@@ -76,17 +76,31 @@ class MembershipListTest {
     }
 
     @Test
-    public void testDeleteId() {
+    public void testDeleteIdSuccess() {
         testMemberList.addMember(stuMemberJenny);
-        testMemberList.deleteMember(100024);
+        testMemberList.deleteMember(100032);
         assertEquals(0, testMemberList.size());
     }
 
     @Test
-    public void testFindMember() {
+    public void testDeleteIdFail() {
         testMemberList.addMember(stuMemberJenny);
-        testMemberList.findMember(100008);
-        assertEquals("Jenny Liu", testMemberList.findMember(100008));
+        testMemberList.deleteMember(100000);
+        assertEquals(1, testMemberList.size());
+    }
+
+    @Test
+    public void testFindMemberSuccess() {
+        testMemberList.addMember(stuMemberJenny);
+        testMemberList.findMember(100028);
+        assertEquals("Jenny Liu", testMemberList.findMember(100028));
+    }
+
+    @Test
+    public void testFindMemberFail() {
+        testMemberList.addMember(stuMemberJenny);
+        testMemberList.findMember(100007);
+        assertEquals("", testMemberList.findMember(100007));
     }
 
 }
