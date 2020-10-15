@@ -91,7 +91,7 @@ public class YogaApp {
         input.nextLine();
         System.out.print("Enter email of member: ");
         String memberEmail = input.nextLine();
-        System.out.print("Is member student? 1 for yes, anything else for no: ");
+        System.out.print("Is member student? 1 for yes, any other number for no: ");
         int memberIsStudentInput = input.nextInt();
 
         boolean memberIsStudent = true;
