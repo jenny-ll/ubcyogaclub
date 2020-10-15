@@ -104,6 +104,7 @@ public class YogaApp {
 
         Member newMember = new Member(memberName, memberEmail, memberIsStudent);
         ourMembers.addMember(newMember);
+        System.out.println("Member added.");
     }
 
     // MODIFIES: this
