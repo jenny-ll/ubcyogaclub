@@ -87,7 +87,8 @@ public class YogaApp {
     // EFFECTS: conducts addition of a member
     private void doAddMember() {
         System.out.print("Enter name of member: ");
-        String memberName = input.nextLine();
+        String memberName = input.next();
+        input.nextLine();
         System.out.print("Enter email of member: ");
         String memberEmail = input.nextLine();
         System.out.print("Is member student? 1 for yes, anything else for no: ");
@@ -108,15 +109,23 @@ public class YogaApp {
     // MODIFIES: this
     // EFFECTS: views all student members
     private void doViewStudents() {
+        List<String> ourStudents = new ArrayList<>();
+        for (Member member : ourMembers.showStudentMembers()) {
+            ourStudents.add(member.getName());
+        }
         System.out.println("Here are all of our student members: "
-                + ourMembers.showStudentMembers());
+                + ourStudents);
     }
 
     // MODIFIES: this
     // EFFECTS: views all non-student members
     private void doViewNonStudents() {
+        List<String> ourNonStudents = new ArrayList<>();
+        for (Member member : ourMembers.showNonStudentMembers()) {
+            ourNonStudents.add(member.getName());
+        }
         System.out.println("Here are all of our non-student members: "
-                + ourMembers.showNonStudentMembers());
+                + ourNonStudents);
     }
 
     // MODIFIES: this
@@ -125,9 +134,12 @@ public class YogaApp {
         System.out.println("ID of member you wish to delete: ");
         int deleteMemberID = input.nextInt();
 
-        ourMembers.deleteMember(deleteMemberID);
-
-        System.out.println("Successfully deleted.");
+        if (!(ourMembers.findMember(deleteMemberID).isEmpty())) {
+            ourMembers.deleteMember(deleteMemberID);
+            System.out.println("Successfully processed.");
+        } else {
+            System.out.println("Sorry, that's not a valid ID.");
+        }
     }
 
     // EFFECTS: finds the member with ID number
@@ -135,7 +147,13 @@ public class YogaApp {
         System.out.println("ID of member you wish to find: ");
         int findMemberID = input.nextInt();
 
-        System.out.println("The name of that member is: "
-                + ourMembers.findMember(findMemberID));
+        if (!(ourMembers.findMember(findMemberID).isEmpty())) {
+            System.out.println("The name of that member is: "
+                    + ourMembers.findMember(findMemberID));
+        } else {
+            System.out.println("Sorry, that's not a valid ID.");
+        }
+
+
     }
 }
