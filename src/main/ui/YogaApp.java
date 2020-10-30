@@ -1,23 +1,37 @@
 package ui;
 
-import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.List;
-
 // Yoga Member Application
-// Source: parts of the Teller example
+// Citation: parts of the Teller example, JSonSerializationDemo
 
 import model.Member;
 import model.MembershipList;
+import persistence.JsonReader;
+import persistence.JsonWriter;
+
+import java.sql.SQLOutput;
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+// Represents the Yoga Membership Application
 
 public class YogaApp {
 
+    private static final String JSON_STORE = "./data/membershiplist.json";
     private MembershipList ourMembers;
     private Member firstMember;
     private Scanner input;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
 
     // EFFECTS: runs the yoga application
-    public YogaApp() {
+    public YogaApp() throws FileNotFoundException {
+        input = new Scanner(System.in);
+        ourMembers = new MembershipList();
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
         runYogaApp();
     }
 
@@ -57,6 +71,10 @@ public class YogaApp {
             doDeleteMember();
         } else if (command.equals("f")) {
             doFindMember();
+        } else if (command.equals("y")) {
+            saveMembershipList();
+        } else if (command.equals("z")) {
+            loadMembershipList();
         } else {
             System.out.println("Selection not valid...");
         }
@@ -80,6 +98,8 @@ public class YogaApp {
         System.out.println("\tn -> view non-students");
         System.out.println("\td -> delete member");
         System.out.println("\tf -> find member");
+        System.out.println("\ty -> save membership list to file");
+        System.out.println("\tz -> load membership list from file");
         System.out.println("\tq -> quit");
     }
 
@@ -154,7 +174,28 @@ public class YogaApp {
         } else {
             System.out.println("Sorry, that's not a valid ID.");
         }
+    }
 
+    // EFFECTS: saves the membership list to file
+    private void saveMembershipList() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(ourMembers);
+            jsonWriter.close();
+            System.out.println("Saved membership list to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
 
+    // MODIFIES: this
+    // EFFECTS: loads membership list from file
+    private void loadMembershipList() {
+        try {
+            ourMembers = jsonReader.read();
+            System.out.println("Loaded membership list from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
     }
 }

@@ -1,14 +1,20 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 // Source: referred to general structure of LibrarySystemMaster practice problem
 
-public class MembershipList {
+public class MembershipList implements Writable {
 
     // Fields
+    private String memberName;
     private List<Member> members;
 
     // Constructor: creates a new empty list of memberships
@@ -50,6 +56,11 @@ public class MembershipList {
         return (ArrayList<Member>) nonStudents;
     }
 
+    // EFFECTS: returns an unmodifiable list of all members in list
+    public List<Member> getMembers() {
+        return Collections.unmodifiableList(members);
+    }
+
     // REQUIRES: a member ID
     // MODIFIES: this
     // EFFECTS: deletes the member corresponding to the ID from the membership list
@@ -68,5 +79,23 @@ public class MembershipList {
             }
         }
         return correctName;
+    }
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("memberName", memberName);
+        json.put("members", membersToJson());
+        return json;
+    }
+
+    // EFFECTS: returns things in this workroom as a JSON array
+    private JSONArray membersToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Member m : members) {
+            jsonArray.put(m.toJson());
+        }
+
+        return jsonArray;
     }
 }

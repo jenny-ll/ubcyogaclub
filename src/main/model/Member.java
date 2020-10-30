@@ -1,8 +1,11 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 // A yoga club member with name, ID, email address, student/non-student
 // Source referred: Teller example
-public class Member {
+public class Member implements Writable {
     //fields:
     private String name;
     private static int nextMemberID = 100000;
@@ -35,5 +38,15 @@ public class Member {
 
     public boolean isStudent() {
         return isStudent;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("memberName", name);
+        json.put("memberEmail", email);
+        json.put("memberStudent", isStudent);
+        json.put("memberId", id);
+        return json;
     }
 }

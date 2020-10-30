@@ -1,0 +1,26 @@
+{"members": [
+  {
+    "memberName": "Jenny Liu",
+    "memberStudent": true,
+    "memberEmail": "jennyjn@students.cs.ubc.ca",
+    "memberId": 100000
+  },
+  {
+    "memberName": "Harry",
+    "memberStudent": true,
+    "memberEmail": "harry@hogwarts.com",
+    "memberId": 100001
+  },
+  {
+    "memberName": "Hermione",
+    "memberStudent": true,
+    "memberEmail": "hermione@hogwarts.com",
+    "memberId": 100002
+  },
+  {
+    "memberName": "Hagrid",
+    "memberStudent": false,
+    "memberEmail": "hagrid@hogwarts.com",
+    "memberId": 100003
+  }
+]}
