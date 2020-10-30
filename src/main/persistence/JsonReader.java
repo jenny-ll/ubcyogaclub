@@ -38,7 +38,7 @@ public class JsonReader {
         return contentBuilder.toString();
     }
 
-    // EFFECTS: parses workroom from JSON object and returns it
+    // EFFECTS: parses membership list from JSON object and returns it
     private MembershipList parseMembershipList(JSONObject jsonObject) {
         MembershipList ml = new MembershipList();
         addMembers(ml, jsonObject);
@@ -46,9 +46,9 @@ public class JsonReader {
     }
 
     // MODIFIES: wr
-    // EFFECTS: parses thingies from JSON object and adds them to workroom
+    // EFFECTS: parses thingies from JSON object and adds them to membership list
     private void addMembers(MembershipList wr, JSONObject jsonObject) {
-        JSONArray jsonArray = jsonObject.getJSONArray("thingies");
+        JSONArray jsonArray = jsonObject.getJSONArray("members");
         for (Object json : jsonArray) {
             JSONObject nextMember = (JSONObject) json;
             addMember(wr, nextMember);
