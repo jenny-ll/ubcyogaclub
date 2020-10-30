@@ -2,6 +2,7 @@ package model;
 
 import java.util.List;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +30,13 @@ public class MemberTest {
         assertEquals("Jenny Liu", stuMember.getName());
         assertEquals("adamjones@gmail.com", nonStuMember.getEmail());
         assertEquals(true, stuMember.isStudent());
-        assertEquals(100000, stuMember.getId());
-        assertEquals(100001, nonStuMember.getId());
+        assertEquals(100002, stuMember.getId());
+        assertEquals(100003, nonStuMember.getId());
+    }
+
+    @Test
+    public void testSetId() {
+        stuMember.setId(200000);
+        assertEquals(200000, stuMember.getId());
     }
 }

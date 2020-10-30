@@ -9,6 +9,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// CITATION: JsonSerializationDemo. I used the general structure.
+
 public class JsonReaderTest extends JsonTest {
 
     @Test
@@ -24,7 +26,7 @@ public class JsonReaderTest extends JsonTest {
 
     @Test
     void testReaderEmptyMembershipList() {
-        JsonReader reader = new JsonReader("./data/testReaderEmptyMembershipList.json");
+        JsonReader reader = new JsonReader("./data/testReaderEmptyMembershipList");
         try {
             MembershipList ml = reader.read();
             assertEquals(0, ml.size());
@@ -35,7 +37,7 @@ public class JsonReaderTest extends JsonTest {
 
     @Test
     void testReaderGeneralMembershipList() {
-        JsonReader reader = new JsonReader("./data/testReaderGeneralMembershipList.json");
+        JsonReader reader = new JsonReader("./data/testReaderGeneralMembershipList");
         try {
             MembershipList ml = reader.read();
             List<Member> members = ml.getMembers();
@@ -43,11 +45,11 @@ public class JsonReaderTest extends JsonTest {
             checkMember("Jenny Liu", "jennyjn@students.cs.ubc.ca",
                     100000, members.get(0));
             checkMember("Harry", "harry@hogwarts.com",
-                    100001, members.get(2));
+                    100001, members.get(1));
             checkMember("Hermione", "hermione@hogwarts.com",
-                    100002, members.get(3));
+                    100002, members.get(2));
             checkMember("Hagrid", "hagrid@hogwarts.com",
-                    100003, members.get(4));
+                    100003, members.get(3));
         } catch (IOException e) {
             fail("Couldn't read from file");
         }

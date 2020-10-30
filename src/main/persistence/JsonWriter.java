@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 import java.io.*;
 
-// CITATION: JsonSerializationDemo structure
+// CITATION: JsonSerializationDemo. I used the general structure.
 
 public class JsonWriter {
     private static final int TAB = 4;
@@ -24,7 +24,7 @@ public class JsonWriter {
     }
 
     // MODIFIES: this
-    // EFFECTS: writes JSON representation of workroom to file
+    // EFFECTS: writes JSON representation of membership list to file
     public void write(MembershipList ml) {
         JSONObject json = ml.toJson();
         saveToFile(json.toString(TAB));

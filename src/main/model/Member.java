@@ -1,10 +1,12 @@
 package model;
 
+import exception.NegativeIDException;
 import org.json.JSONObject;
 import persistence.Writable;
 
 // A yoga club member with name, ID, email address, student/non-student
-// Source referred: Teller example
+// CITATION: Teller example
+
 public class Member implements Writable {
     //fields:
     private String name;
@@ -38,6 +40,12 @@ public class Member implements Writable {
 
     public boolean isStudent() {
         return isStudent;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: set ID to integer i
+    public void setId(Integer i) {
+        this.id = i;
     }
 
     @Override

@@ -11,6 +11,8 @@ import java.util.stream.Stream;
 
 import org.json.*;
 
+// CITATION: JsonSerializationDemo. I used much of the general structure.
+
 public class JsonReader {
     private String source;
 
@@ -19,7 +21,7 @@ public class JsonReader {
         this.source = source;
     }
 
-    // EFFECTS: reads workroom from file and returns it;
+    // EFFECTS: reads membership list from file and returns it;
     // throws IOException if an error occurs reading data from file
     public MembershipList read() throws IOException {
         String jsonData = readFile(source);
@@ -45,17 +47,17 @@ public class JsonReader {
         return ml;
     }
 
-    // MODIFIES: wr
-    // EFFECTS: parses thingies from JSON object and adds them to membership list
-    private void addMembers(MembershipList wr, JSONObject jsonObject) {
+    // MODIFIES: ml
+    // EFFECTS: parses members from JSON object and adds them to membership list
+    private void addMembers(MembershipList ml, JSONObject jsonObject) {
         JSONArray jsonArray = jsonObject.getJSONArray("members");
         for (Object json : jsonArray) {
             JSONObject nextMember = (JSONObject) json;
-            addMember(wr, nextMember);
+            addMember(ml, nextMember);
         }
     }
 
-    // MODIFIES: wr
+    // MODIFIES: ml
     // EFFECTS: parses member from JSON object and adds it to membership list
     private void addMember(MembershipList ml, JSONObject jsonObject) {
         String memberName = jsonObject.getString("memberName");
@@ -63,6 +65,7 @@ public class JsonReader {
         Boolean memberStudent = jsonObject.getBoolean("memberStudent");
         Integer memberId = jsonObject.getInt("memberId");
         Member member = new Member(memberName, memberEmail, memberStudent);
+        member.setId(memberId);
         ml.addMember(member);
     }
 

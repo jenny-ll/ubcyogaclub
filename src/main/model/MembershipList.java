@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-// Source: referred to general structure of LibrarySystemMaster practice problem
+// CITATION: referred to general structure of LibrarySystemMaster practice problem,
+//           as well as the model of JSON methods in the JsonSerializationDemo.
 
 public class MembershipList implements Writable {
 
@@ -88,7 +89,7 @@ public class MembershipList implements Writable {
         return json;
     }
 
-    // EFFECTS: returns things in this workroom as a JSON array
+    // EFFECTS: returns things in this membership list as a JSON array
     private JSONArray membersToJson() {
         JSONArray jsonArray = new JSONArray();
 
