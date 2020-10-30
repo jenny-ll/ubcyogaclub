@@ -1,0 +1,14 @@
+{"members": [
+    {
+        "memberName": "Spiderman",
+        "memberStudent": true,
+        "memberEmail": "spiderman@avengers.com",
+        "memberId": 100000
+    },
+    {
+        "memberName": "Ironman",
+        "memberStudent": false,
+        "memberEmail": "ironman@avengers.com",
+        "memberId": 100001
+    }
+]}

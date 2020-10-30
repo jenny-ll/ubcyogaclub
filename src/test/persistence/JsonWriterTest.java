@@ -57,9 +57,9 @@ public class JsonWriterTest extends JsonTest {
             JsonReader reader = new JsonReader("./data/testWriterGeneralMembershipList.json");
             ml = reader.read();
             List<Member> members = ml.getMembers();
-            assertEquals(2, members.size());
             checkMember("Spiderman", "spiderman@avengers.com",100000,members.get(0));
             checkMember("Ironman", "ironman@avengers.com",100001,members.get(1));
+            assertEquals(2, members.size());
 
         } catch (IOException e) {
             fail("Exception should not have been thrown");
