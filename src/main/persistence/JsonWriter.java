@@ -1,4 +1,5 @@
 package persistence;
+
 import model.MembershipList;
 import org.json.JSONObject;
 

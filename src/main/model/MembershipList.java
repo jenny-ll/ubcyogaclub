@@ -81,6 +81,7 @@ public class MembershipList implements Writable {
         }
         return correctName;
     }
+
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
