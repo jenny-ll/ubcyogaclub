@@ -4,13 +4,15 @@ import exception.NegativeIDException;
 import org.json.JSONObject;
 import persistence.Writable;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 // A yoga club member with name, ID, email address, student/non-student
 // CITATION: Teller example
 
 public class Member implements Writable {
     //fields:
     private String name;
-    private static int nextMemberID = 100000;
+    private static final AtomicInteger nextMemberID = new AtomicInteger(100000);
     private int id;
     private String email;
     private boolean isStudent;
@@ -20,7 +22,7 @@ public class Member implements Writable {
     //         to memberEmail, ID is the next positive integer that is unique
     public Member(String memberName, String memberEmail, Boolean memberStudent) {
         name = memberName;
-        id = nextMemberID++;
+        id = nextMemberID.incrementAndGet();
         email = memberEmail;
         isStudent = memberStudent;
     }

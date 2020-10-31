@@ -65,8 +65,8 @@ public class MembershipList implements Writable {
     // REQUIRES: a member ID
     // MODIFIES: this
     // EFFECTS: deletes the member corresponding to the ID from the membership list
-    public void deleteMember(int id) {
-        members.removeIf(member -> (member.getId() == id));
+    public void deleteMember(int i) {
+        members.removeIf(member -> (member.getId() == i));
     }
 
     // REQUIRES: a member ID
@@ -77,6 +77,8 @@ public class MembershipList implements Writable {
         for (Member member : this.members) {
             if (member.getId() == id) {
                 correctName = member.getName();
+            } else {
+                correctName = "Member not found, sorry.";
             }
         }
         return correctName;
@@ -90,7 +92,7 @@ public class MembershipList implements Writable {
         return json;
     }
 
-    // EFFECTS: returns things in this membership list as a JSON array
+    // EFFECTS: returns members in this membership list as a JSON array
     private JSONArray membersToJson() {
         JSONArray jsonArray = new JSONArray();
 

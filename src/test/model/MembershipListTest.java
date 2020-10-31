@@ -94,13 +94,13 @@ class MembershipListTest {
     @Test
     public void testFindMemberSuccess() {
         testMemberList.addMember(stuMemberJenny);
-        assertEquals("Jenny Liu", testMemberList.findMember(100028));
+        assertEquals("Jenny Liu", testMemberList.findMember(100000));
     }
 
     @Test
     public void testFindMemberFail() {
         testMemberList.addMember(stuMemberJenny);
-        assertEquals("", testMemberList.findMember(100007));
+        assertEquals("Member not found, sorry.", testMemberList.findMember(100007));
     }
 
 }
