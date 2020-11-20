@@ -6,19 +6,28 @@ package ui;
 
 import model.Member;
 import model.MembershipList;
+import ui.tools.AddTool;
+import ui.tools.DeleteTool;
 import ui.tools.Tool;
+
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * TableDemo is just like SimpleTableDemo, except that it
  * uses a custom TableModel.
  */
 public class YogaAppNew extends JPanel {
+
+    private static final AtomicInteger nextMemberID = new AtomicInteger(100000);
 
     private Member currentMember;
     private Tool activeTool;
@@ -30,7 +39,8 @@ public class YogaAppNew extends JPanel {
     private static final String fireString = "Delete Member";
 
     private JButton fireButton;
-    private JTextField memberName;
+    private JTextField name;
+    private JTextField email;
     private JTable table;
 
     public YogaAppNew() {
@@ -40,7 +50,7 @@ public class YogaAppNew extends JPanel {
     }
 
     // getters
-    public MembershipList getMember() {
+    public Member getMember() {
         return currentMember;
     }
 
@@ -54,23 +64,13 @@ public class YogaAppNew extends JPanel {
         JTable table = new JTable(new MembershipsTable());
         table.setPreferredScrollableViewportSize(new Dimension(500, 300));
         table.setFillsViewportHeight(true);
+        createTools();
 
         //Create the scroll pane and add the table to it.
         JScrollPane scrollPane = new JScrollPane(table);
 
         //Add the scroll pane to this panel.
         add(scrollPane);
-    }
-
-    // MODIFIES: this
-    // EFFECTS:  declares and instantiates a Member (newMember), and adds it to members
-    private void addNewMember() {
-        Member newMember = new Member();
-        currentMember = newMember;
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.addRow(new Object[]{currentMember.getId(), currentMember.getName(),
-                currentMember.getEmail()});
-        validate();
     }
 
     public void setActiveTool(Tool someTool) {
@@ -82,22 +82,12 @@ public class YogaAppNew extends JPanel {
     }
 
     class MembershipsTable extends AbstractTableModel {
-        private String[] columnNames = {"First Name",
-                "Last Name",
-                "Sport",
-                "# of Years",
-                "Vegetarian"};
+        private String[] columnNames = {"ID",
+                "Full Name",
+                "Email", "Student?"};
         private Object[][] data = {
-                {"Kathy", "Smith",
-                        "Snowboarding", new Integer(5), new Boolean(false)},
-                {"John", "Doe",
-                        "Rowing", new Integer(3), new Boolean(true)},
-                {"Sue", "Black",
-                        "Knitting", new Integer(2), new Boolean(false)},
-                {"Jane", "White",
-                        "Speed reading", new Integer(20), new Boolean(true)},
-                {"Joe", "Brown",
-                        "Pool", new Integer(10), new Boolean(false)}
+                {"123",
+                        "Jenny Liu", "jenny.liu.418@gmail.com",true},
         };
 
         public int getColumnCount() {
@@ -174,6 +164,34 @@ public class YogaAppNew extends JPanel {
             }
             System.out.println("--------------------------");
         }
+    }
+
+    // MODIFIES: this
+    // EFFECTS:  a helper method which declares and instantiates all tools
+    private void createTools() {
+        JTextField nameField = new JTextField(10);
+        JTextField emailField = new JTextField(10);
+        JLabel nameLabel = new JLabel("Enter member name");
+        JLabel emailLabel = new JLabel("Enter member email");
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(0,1));
+        panel.setSize(new Dimension(0, 0));
+        panel.add(nameLabel);
+        panel.add(nameField);
+        panel.add(emailLabel);
+        panel.add(emailField);
+        add(panel, BorderLayout.SOUTH);
+
+        AddTool addTool = new AddTool(this, panel);
+        tools.add(addTool);
+
+        JLabel deleteLabel = new JLabel("To delete, please select the member.");
+        panel.add(deleteLabel);
+
+        DeleteTool delTool = new DeleteTool(this, panel);
+        tools.add(delTool);
+
+        setActiveTool(addTool);
     }
 
     /**
