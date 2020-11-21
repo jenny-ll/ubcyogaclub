@@ -36,12 +36,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/**
- * TableDemo is just like SimpleTableDemo, except that it
- * uses a custom TableModel.
- */
+
 public class YogaAppNew extends JPanel implements ActionListener {
     private BufferedImage image;
+    private JButton openButton;
+    private JButton saveButton;
+    private JTextArea log;
+    private JPanel buttonPanel;
+    private JScrollPane logScrollPane;
 
     private static final AtomicInteger nextMemberID = new AtomicInteger(100000);
     private static final Integer COLS = 4;
@@ -125,6 +127,32 @@ public class YogaAppNew extends JPanel implements ActionListener {
         add(panel, BorderLayout.SOUTH);
     }
 
+    // EFFECTS: Allows user to choose a file to save or open
+
+    public void fileChooser() {
+
+        log = new JTextArea(5,20);
+        log.setMargin(new Insets(5,5,5,5));
+        log.setEditable(false);
+        logScrollPane = new JScrollPane(log);
+
+        //Create the open button.
+        openButton = new JButton("Open a File...");
+        openButton.addActionListener(this);
+
+        //Create the save button.
+        saveButton = new JButton("Save a File...");
+        saveButton.addActionListener(this);
+
+        //Put the buttons in a separate panel
+        buttonPanel = new JPanel();
+        buttonPanel.add(openButton);
+        buttonPanel.add(saveButton);
+
+        add(buttonPanel, BorderLayout.PAGE_START);
+        add(logScrollPane, BorderLayout.CENTER);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("click1")) {
@@ -142,6 +170,7 @@ public class YogaAppNew extends JPanel implements ActionListener {
             }
         }
     }
+
 
     public void setActiveTool(Tool someTool) {
         if (activeTool != null) {
@@ -167,6 +196,8 @@ public class YogaAppNew extends JPanel implements ActionListener {
         frame.pack();
         frame.setVisible(true);
     }
+
+    // EFFECTS: Runs main to launch the GUI
 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
