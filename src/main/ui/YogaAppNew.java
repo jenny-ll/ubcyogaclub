@@ -6,7 +6,8 @@ package ui;
 // https://stackoverflow.com/questions/48913222/how-to-add-a-row-to-a-jtable-using-abstracttablemodel
 // https://stackoverflow.com/questions/21110926/put-jlabels-and-jtextfield-in-same-frame-as-jtable
 // https://stackoverflow.com/questions/299495/how-to-add-an-image-to-a-jpanel
-// Table Demo Example from https://docs.oracle.com/javase/tutorial/uiswing/examples/components/index.html
+// Table Demo Example and JWSFileChooserDemo.java from
+// https://docs.oracle.com/javase/tutorial/uiswing/examples/components/index.html
 // Simple Drawing Player example from class.
 
 import model.Member;
