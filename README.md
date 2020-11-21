@@ -23,7 +23,6 @@ The key functionalities of this application include:
 
 - As a user, I want to be able to add a new member
 - As a user, I want to be able to view all non-student and student members
-- As a user, I want to be able to find a member's name based on ID
 - As a user, I want to be able to delete a member
 - As a user, I want to be able to save the membership list
 - As a user, I want to be able to be able to load my membership list from a file
