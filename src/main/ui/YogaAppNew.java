@@ -1,11 +1,14 @@
 package ui;
 
-/*
- * TableDemo.java requires no other files.
- */
+// Citations:
+// https://stackoverflow.com/questions/546144/adding-jtextfield-to-a-jpanel-and-showing-them
+// https://stackoverflow.com/questions/23465295/remove-a-selected-row-from-jtable-on-button-click
+// https://stackoverflow.com/questions/48913222/how-to-add-a-row-to-a-jtable-using-abstracttablemodel
+// https://stackoverflow.com/questions/21110926/put-jlabels-and-jtextfield-in-same-frame-as-jtable
 
 import model.Member;
 import model.MembershipList;
+import org.omg.CORBA.Object;
 import ui.tools.AddTool;
 import ui.tools.DeleteTool;
 import ui.tools.Tool;
@@ -17,6 +20,7 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,26 +29,35 @@ import java.awt.event.ActionListener;
  * TableDemo is just like SimpleTableDemo, except that it
  * uses a custom TableModel.
  */
-public class YogaAppNew extends JPanel {
+public class YogaAppNew extends JPanel implements ActionListener {
 
     private static final AtomicInteger nextMemberID = new AtomicInteger(100000);
+    private static final Integer COLS = 4;
 
     private Member currentMember;
+    private MembershipList members;
     private Tool activeTool;
     private List<Tool> tools;
 
-    private boolean debug = false;
+    private JTable table;
+    private Object[][] data;
 
-    private static final String hireString = "Add Member";
-    private static final String fireString = "Delete Member";
-
-    private JButton fireButton;
     private JTextField name;
     private JTextField email;
-    private JTable table;
+
+    String[] columnNames = { "ID", "Full Name", "Email", "Student?" };
+
+    JLabel deleteLabel = new JLabel("To delete, please select the member.");
+    JLabel nameLabel = new JLabel("Enter member name");
+    JLabel emailLabel = new JLabel("Enter member email");
+
+    JButton addButton = new JButton("Add Member");
+    JButton deleteButton = new JButton("Delete Member");
+
+    private DefaultTableModel model = new DefaultTableModel(data, columnNames);
 
     public YogaAppNew() {
-        super(new GridLayout(2,0));
+        super(new GridLayout(2, 0));
         initializeFields();
         initializeGraphics();
     }
@@ -60,17 +73,55 @@ public class YogaAppNew extends JPanel {
         tools = new ArrayList<Tool>();
     }
 
-    private void initializeGraphics() {
-        JTable table = new JTable(new MembershipsTable());
+    public void initializeGraphics() {
+        name = new JTextField(10);
+        email = new JTextField(10);
+        table = new JTable(model);
         table.setPreferredScrollableViewportSize(new Dimension(500, 300));
         table.setFillsViewportHeight(true);
-        createTools();
 
-        //Create the scroll pane and add the table to it.
         JScrollPane scrollPane = new JScrollPane(table);
-
-        //Add the scroll pane to this panel.
         add(scrollPane);
+        JPanel panel = new JPanel();
+
+        panel.setLayout(new GridLayout(10, 4));
+        panel.setSize(new Dimension(100, 100));
+
+        addButton.setActionCommand("click1");
+        addButton.addActionListener(this);
+
+        panel.add(nameLabel);
+        panel.add(name);
+        panel.add(emailLabel);
+        panel.add(email);
+        panel.add(addButton);
+
+        deleteButton.setActionCommand("click2");
+        deleteButton.addActionListener(this);
+
+        panel.add(deleteLabel);
+        panel.add(deleteButton);
+        add(panel, BorderLayout.SOUTH);
+
+        setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("click1")) {
+            String data1 = name.getText();
+            String data2 = email.getText();
+            Integer data3 = nextMemberID.incrementAndGet();
+
+            java.lang.Object[] row = {data3, data1, data2, true};
+            model.addRow(row);
+
+        } else if (e.getActionCommand().equals("click2")) {
+            if (table.getSelectedRow() != -1) {
+                // remove selected row from the model
+                model.removeRow(table.getSelectedRow());
+            }
+        }
     }
 
     public void setActiveTool(Tool someTool) {
@@ -82,13 +133,17 @@ public class YogaAppNew extends JPanel {
     }
 
     class MembershipsTable extends AbstractTableModel {
+        // columns
         private String[] columnNames = {"ID",
                 "Full Name",
                 "Email", "Student?"};
-        private Object[][] data = {
-                {"123",
-                        "Jenny Liu", "jenny.liu.418@gmail.com",true},
-        };
+        // data
+        private Object[][] data = {};
+
+        public void setData(Object[][] data) {
+            this.data = data;
+            fireTableDataChanged();
+        }
 
         public int getColumnCount() {
             return columnNames.length;
@@ -106,20 +161,17 @@ public class YogaAppNew extends JPanel {
             return data[row][col];
         }
 
-        /*
-         * JTable uses this method to determine the default renderer/
-         * editor for each cell.  If we didn't implement this method,
-         * then the last column would contain text ("true"/"false"),
-         * rather than a check box.
-         */
+        public void removeRow(int row) {
+            // remove a row from your internal data structure
+            fireTableRowsDeleted(row, row);
+        }
+
+
         public Class getColumnClass(int c) {
             return getValueAt(0, c).getClass();
         }
 
-        /*
-         * Don't need to implement this method unless your table's
-         * editable.
-         */
+
         public boolean isCellEditable(int row, int col) {
             //Note that the data/cell address is constant,
             //no matter where the cell appears onscreen.
@@ -130,25 +182,9 @@ public class YogaAppNew extends JPanel {
             }
         }
 
-        /*
-         * Don't need to implement this method unless your table's
-         * data can change.
-         */
         public void setValueAt(Object value, int row, int col) {
-            if (debug) {
-                System.out.println("Setting value at " + row + "," + col
-                        + " to " + value
-                        + " (an instance of "
-                        + value.getClass() + ")");
-            }
-
             data[row][col] = value;
             fireTableCellUpdated(row, col);
-
-            if (debug) {
-                System.out.println("New value of data:");
-                printDebugData();
-            }
         }
 
         private void printDebugData() {
@@ -168,38 +204,59 @@ public class YogaAppNew extends JPanel {
 
     // MODIFIES: this
     // EFFECTS:  a helper method which declares and instantiates all tools
-    private void createTools() {
-        JTextField nameField = new JTextField(10);
-        JTextField emailField = new JTextField(10);
-        JLabel nameLabel = new JLabel("Enter member name");
-        JLabel emailLabel = new JLabel("Enter member email");
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(0,1));
-        panel.setSize(new Dimension(0, 0));
-        panel.add(nameLabel);
-        panel.add(nameField);
-        panel.add(emailLabel);
-        panel.add(emailField);
-        add(panel, BorderLayout.SOUTH);
-
-        AddTool addTool = new AddTool(this, panel);
-        tools.add(addTool);
-
-        JLabel deleteLabel = new JLabel("To delete, please select the member.");
-        panel.add(deleteLabel);
-
-        DeleteTool delTool = new DeleteTool(this, panel);
-        tools.add(delTool);
-
-        setActiveTool(addTool);
-    }
+//    private void createTools() {
+//        String[] cols = {"ID", "Full Name", "Email", "Student?"};
+//        members = (MembershipList) members.getMembers();
+//        DefaultTableModel model = new DefaultTableModel(cols, 0);
+//        JTextField nameField = new JTextField(10);
+//        JTextField emailField = new JTextField(10);
+//        JLabel nameLabel = new JLabel("Enter member name");
+//        JLabel emailLabel = new JLabel("Enter member email");
+//
+//        addButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                String data1 = name.getText();
+//                String data2 = email.getText();
+//                Integer data3 = nextMemberID.incrementAndGet();
+//                Object[] row = {data3, data1, data2,true};
+//                model.addRow(row);
+//                validate();
+//            }
+//        });
+//
+//        deleteButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                if (table.getSelectedRow() != -1) {
+//                    // remove selected row from the model
+//                    model.removeRow(table.getSelectedRow());
+//                }
+//            }
+//        });
+//
+//        JPanel panel = new JPanel();
+//        panel.setLayout(new GridLayout(0,1));
+//        panel.setSize(new Dimension(0, 0));
+//        panel.add(nameLabel);
+//        panel.add(nameField);
+//        panel.add(emailLabel);
+//        panel.add(emailField);
+//        JButton addButton = new JButton("Add Member");
+//        panel.add(addButton);
+//        JLabel deleteLabel = new JLabel("To delete, please select the member.");
+//        panel.add(deleteLabel);
+//        JButton deleteButton = new JButton("Delete Member");
+//        panel.add(deleteButton);
+//        add(panel, BorderLayout.SOUTH);
+//    }
 
     /**
      * Create the GUI and show it.  For thread safety,
      * this method should be invoked from the
      * event-dispatching thread.
      */
-    private static void createAndShowGUI() {
+    public static void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame("UBC Yoga Club Memberships");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
