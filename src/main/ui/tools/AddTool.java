@@ -12,7 +12,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/* ListDemo.java requires no other files. */
+// CITATION: SimpleDrawingPlayer from class
+
 public class AddTool extends Tool {
 
     private Member memberToAdd;

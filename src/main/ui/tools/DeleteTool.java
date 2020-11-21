@@ -10,7 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 
-/* ListDemo.java requires no other files. */
+// CITATION: SimpleDrawingPlayer from class
+
 public class DeleteTool extends Tool {
 
     private Member memberToAdd;
@@ -26,7 +27,7 @@ public class DeleteTool extends Tool {
     }
 
     // MODIFIES: this
-    // EFFECTS:  constructs an Add Member button which is then added to the JComponent (parent)
+    // EFFECTS:  constructs an Delete Member button which is then added to the JComponent (parent)
     //           which is passed in as a parameter
     @Override
     protected void createButton(JComponent parent) {
@@ -36,7 +37,7 @@ public class DeleteTool extends Tool {
 
     private class DeleteToolClickHandler implements ActionListener {
 
-        // EFFECTS: sets active tool to the Add tool
+        // EFFECTS: sets active tool to the Delete tool
         //          called by the framework when the tool is clicked
         @Override
         public void actionPerformed(ActionEvent e) {
