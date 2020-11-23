@@ -6,6 +6,7 @@ package ui;
 // https://stackoverflow.com/questions/48913222/how-to-add-a-row-to-a-jtable-using-abstracttablemodel
 // https://stackoverflow.com/questions/21110926/put-jlabels-and-jtextfield-in-same-frame-as-jtable
 // https://stackoverflow.com/questions/299495/how-to-add-an-image-to-a-jpanel
+// https://stackoverflow.com/questions/7391877/how-to-add-checkboxes-to-jtable-swing
 // Table Demo Example and JWSFileChooserDemo.java from
 // https://docs.oracle.com/javase/tutorial/uiswing/examples/components/index.html
 // Simple Drawing Player example from class.
@@ -13,29 +14,24 @@ package ui;
 import model.Member;
 import model.MembershipList;
 import org.omg.CORBA.Object;
-import ui.tools.AddTool;
-import ui.tools.DeleteTool;
 import ui.tools.Tool;
 
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.JFileChooser;
+import java.io.File;
 
 
 public class YogaAppNew extends JPanel implements ActionListener {
@@ -56,9 +52,12 @@ public class YogaAppNew extends JPanel implements ActionListener {
 
     private JTable table;
     private Object[][] data;
+    private JPanel panel;
 
     private JTextField name;
     private JTextField email;
+
+    private DefaultTableModel model;
 
     String[] columnNames = { "ID", "Full Name", "Email", "Student?" };
 
@@ -69,10 +68,8 @@ public class YogaAppNew extends JPanel implements ActionListener {
     JButton addButton = new JButton("Add Member");
     JButton deleteButton = new JButton("Delete Member");
 
-    private DefaultTableModel model = new DefaultTableModel(data, columnNames);
-
-    BufferedImage dogPic = ImageIO.read(new File("./data/yogaclublogo.png"));
-    JLabel picLabel = new JLabel(new ImageIcon(dogPic.getScaledInstance(50,50, Image.SCALE_FAST)));
+    BufferedImage yogaPic = ImageIO.read(new File("./data/yogaclublogo.png"));
+    JLabel picLabel = new JLabel(new ImageIcon(yogaPic.getScaledInstance(50,50, Image.SCALE_FAST)));
 
     public YogaAppNew() throws IOException {
         super(new GridLayout(2, 0));
@@ -95,63 +92,71 @@ public class YogaAppNew extends JPanel implements ActionListener {
     // buttons, and labels. Also includes the panel itself, which layouts everything.
 
     public void initializeGraphics() throws IOException {
+        model = new DefaultTableModel(data, columnNames);
         name = new JTextField(10);
         email = new JTextField(10);
-        table = new JTable(model);
+
+        makeTable();
 
         table.setPreferredScrollableViewportSize(new Dimension(500, 300));
         table.setFillsViewportHeight(true);
 
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane);
-        JPanel panel = new JPanel();
-
-        panel.add(picLabel);
-
-        panel.setLayout(new GridLayout(10, 4));
-        panel.setSize(new Dimension(100, 100));
 
         addButton.setActionCommand("click1");
         addButton.addActionListener(this);
 
+        deleteButton.setActionCommand("click2");
+        deleteButton.addActionListener(this);
+
+        assembleTable();
+    }
+
+    private void assembleTable() {
+        panel = new JPanel();
+        panel.add(picLabel);
+        panel.setLayout(new GridLayout(10, 4));
+        panel.setSize(new Dimension(100, 100));
         panel.add(nameLabel);
         panel.add(name);
         panel.add(emailLabel);
         panel.add(email);
         panel.add(addButton);
-
-        deleteButton.setActionCommand("click2");
-        deleteButton.addActionListener(this);
-
         panel.add(deleteLabel);
         panel.add(deleteButton);
         add(panel, BorderLayout.SOUTH);
     }
 
+    private void makeTable() {
+        table = new JTable(model) {
+
+            @Override
+            public Class getColumnClass(int column) {
+                switch (column) {
+                    case 0:
+                        return Integer.class;
+                    case 1:
+                        return String.class;
+                    case 2:
+                        return String.class;
+                    default:
+                        return Boolean.class;
+                }
+            }
+        };
+    }
+
     // EFFECTS: Allows user to choose a file to save or open
 
     public void fileChooser() {
-
-        log = new JTextArea(5,20);
-        log.setMargin(new Insets(5,5,5,5));
-        log.setEditable(false);
-        logScrollPane = new JScrollPane(log);
-
-        //Create the open button.
-        openButton = new JButton("Open a File...");
-        openButton.addActionListener(this);
-
-        //Create the save button.
-        saveButton = new JButton("Save a File...");
-        saveButton.addActionListener(this);
-
-        //Put the buttons in a separate panel
-        buttonPanel = new JPanel();
-        buttonPanel.add(openButton);
-        buttonPanel.add(saveButton);
-
-        add(buttonPanel, BorderLayout.PAGE_START);
-        add(logScrollPane, BorderLayout.CENTER);
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+        }
     }
 
     @Override
