@@ -7,17 +7,21 @@ package ui;
 // https://stackoverflow.com/questions/21110926/put-jlabels-and-jtextfield-in-same-frame-as-jtable
 // https://stackoverflow.com/questions/299495/how-to-add-an-image-to-a-jpanel
 // https://stackoverflow.com/questions/7391877/how-to-add-checkboxes-to-jtable-swing
+// https://www.javatpoint.com/java-jmenuitem-and-jmenu
 // Table Demo Example and JWSFileChooserDemo.java from
 // https://docs.oracle.com/javase/tutorial/uiswing/examples/components/index.html
 // Simple Drawing Player example from class.
 
 import model.Member;
 import model.MembershipList;
+import org.json.JSONObject;
 import org.omg.CORBA.Object;
+import persistence.JsonWriter;
 import ui.tools.Tool;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
@@ -31,8 +35,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.awt.event.ActionListener;
 
 import javax.swing.JFileChooser;
-import java.io.File;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 public class YogaAppNew extends JPanel implements ActionListener {
     private BufferedImage image;
@@ -44,6 +52,7 @@ public class YogaAppNew extends JPanel implements ActionListener {
 
     private static final AtomicInteger nextMemberID = new AtomicInteger(100000);
     private static final Integer COLS = 4;
+    private static final String JSON_STORE = "./data/YogaAppMembershipList.json";
 
     private Member currentMember;
     private MembershipList members;
@@ -56,14 +65,24 @@ public class YogaAppNew extends JPanel implements ActionListener {
 
     private JTextField name;
     private JTextField email;
+    private JMenu menu;
+    private JMenuItem save;
+    private JMenuItem open;
+    private JMenuBar mb;
+
+    private JSONObject jsonObject;
+    private String jsonData;
+    private JsonWriter jsonWriter;
+    private JFileChooser fileChooser;
+    private String fileName;
 
     private DefaultTableModel model;
 
     String[] columnNames = { "ID", "Full Name", "Email", "Student?" };
 
-    JLabel deleteLabel = new JLabel("To delete, please select the member.");
-    JLabel nameLabel = new JLabel("Enter member name");
-    JLabel emailLabel = new JLabel("Enter member email");
+    JLabel deleteLabel = new JLabel("To delete, please select the member then press 'Delete Member'.");
+    JLabel nameLabel = new JLabel("Enter member full name:");
+    JLabel emailLabel = new JLabel("Enter member email:");
 
     JButton addButton = new JButton("Add Member");
     JButton deleteButton = new JButton("Delete Member");
@@ -96,7 +115,9 @@ public class YogaAppNew extends JPanel implements ActionListener {
         name = new JTextField(10);
         email = new JTextField(10);
 
-        makeTable();
+        assembleTable();
+
+        checkboxTable();
 
         table.setPreferredScrollableViewportSize(new Dimension(500, 300));
         table.setFillsViewportHeight(true);
@@ -109,12 +130,14 @@ public class YogaAppNew extends JPanel implements ActionListener {
 
         deleteButton.setActionCommand("click2");
         deleteButton.addActionListener(this);
-
-        assembleTable();
     }
+
+    // EFFECTS: assemble everything onto panel
 
     private void assembleTable() {
         panel = new JPanel();
+        makeMenu();
+        panel.add(mb, BorderLayout.NORTH);
         panel.add(picLabel);
         panel.setLayout(new GridLayout(10, 4));
         panel.setSize(new Dimension(100, 100));
@@ -125,10 +148,28 @@ public class YogaAppNew extends JPanel implements ActionListener {
         panel.add(addButton);
         panel.add(deleteLabel);
         panel.add(deleteButton);
-        add(panel, BorderLayout.SOUTH);
+        add(panel);
     }
 
-    private void makeTable() {
+    public void makeMenu() {
+        mb = new JMenuBar();
+        menu = new JMenu("Menu");
+        save = new JMenuItem("Save file");
+        open = new JMenuItem("Open file");
+        menu.add(save);
+        menu.add(open);
+        mb.add(menu);
+
+        save.setActionCommand("saveClick");
+        save.addActionListener(this);
+
+        open.setActionCommand("openClick");
+        open.addActionListener(this);
+    }
+
+    // EFFECTS: make table have checkbox for student
+
+    private void checkboxTable() {
         table = new JTable(model) {
 
             @Override
@@ -148,6 +189,10 @@ public class YogaAppNew extends JPanel implements ActionListener {
     }
 
     // EFFECTS: Allows user to choose a file to save or open
+    //          (consider how to turn data into workable json file?)
+    //          turn each row into member objects, then use write method
+    //          use JsonWriter and JsonReader for saving and loading files
+    //          add Member to MembershipList additionally,
 
     public void fileChooser() {
         JFileChooser fileChooser = new JFileChooser();
@@ -156,24 +201,51 @@ public class YogaAppNew extends JPanel implements ActionListener {
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+            fileName = fileChooser.getSelectedFile().getAbsolutePath();
         }
+
     }
+
+    // make sure to add member to membershiplist
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        members = new MembershipList();
         if (e.getActionCommand().equals("click1")) {
-            String data1 = name.getText();
-            String data2 = email.getText();
-            Integer data3 = nextMemberID.incrementAndGet();
+            String nameText = name.getText();
+            String emailText = email.getText();
+            Integer memberID = nextMemberID.incrementAndGet();
 
-            java.lang.Object[] row = {data3, data1, data2, true};
+            java.lang.Object[] row = {memberID, nameText, emailText, true};
             model.addRow(row);
+
+            currentMember = new Member(nameText,emailText,true);
+            members.addMember(currentMember);
 
         } else if (e.getActionCommand().equals("click2")) {
             if (table.getSelectedRow() != -1) {
+                int rowConstant = table.getSelectedRow();
+                Integer memberID = (Integer) table.getValueAt(rowConstant,0);
                 // remove selected row from the model
                 model.removeRow(table.getSelectedRow());
+                // remove selected row from membership list
+                members.deleteMember(memberID);
             }
+        } else if (e.getActionCommand().equals("saveClick")) {
+            saveMembershipList();
+        }
+    }
+
+    // EFFECTS: saves the membership list to file
+    private void saveMembershipList() {
+        jsonWriter = new JsonWriter(JSON_STORE);
+        try {
+            jsonWriter.open();
+            jsonWriter.write(members);
+            jsonWriter.close();
+            System.out.println("Saved membership list to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
         }
     }
 

@@ -94,7 +94,7 @@ class MembershipListTest {
     @Test
     public void testFindMemberSuccess() {
         testMemberList.addMember(stuMemberJenny);
-        assertEquals("Jenny Liu", testMemberList.findMember(100000));
+        assertEquals("Jenny Liu", testMemberList.findMember(100041));
     }
 
     @Test

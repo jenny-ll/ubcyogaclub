@@ -57,8 +57,8 @@ public class JsonWriterTest extends JsonTest {
             JsonReader reader = new JsonReader("./data/testWriterGeneralMembershipList.json");
             ml = reader.read();
             List<Member> members = ml.getMembers();
-            checkMember("Spiderman", "spiderman@avengers.com",100000,members.get(0));
-            checkMember("Ironman", "ironman@avengers.com",100001,members.get(1));
+            checkMember("Spiderman", "spiderman@avengers.com",100001,members.get(0));
+            checkMember("Ironman", "ironman@avengers.com",100002,members.get(1));
             assertEquals(2, members.size());
 
         } catch (IOException e) {
