@@ -33,3 +33,7 @@ The key functionalities of this application include:
 exception whenever the email format is incorrect (ie. doesn't follow xxx@xx.xx format)
 - This exception is thrown in the Member constructor method.
 
+## Phase 4 Task 3
+
+- I would refactor this by potentially removing the Tool class, because I believe it isn't
+necessary for my GUI
