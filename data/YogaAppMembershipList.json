@@ -1,0 +1,14 @@
+{"members": [
+    {
+        "memberName": "jenny",
+        "memberStudent": true,
+        "memberEmail": "liu",
+        "memberId": 100001
+    },
+    {
+        "memberName": "jenny",
+        "memberStudent": true,
+        "memberEmail": "liu",
+        "memberId": 100002
+    }
+]}

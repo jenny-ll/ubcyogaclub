@@ -27,3 +27,9 @@ The key functionalities of this application include:
 - As a user, I want to be able to save the membership list
 - As a user, I want to be able to be able to load my membership list from a file
 
+## Phase 4 Task 2
+
+- I made the Member constructor within the Member class robust by throwing an 
+exception whenever the email format is incorrect (ie. doesn't follow xxx@xx.xx format)
+- This exception is thrown in the Member constructor method.
+

@@ -3,6 +3,7 @@ package ui;
 // Yoga Member Application
 // Citation: parts of the Teller example, JSonSerializationDemo
 
+import exception.InvalidEmailException;
 import model.Member;
 import model.MembershipList;
 import persistence.JsonReader;
@@ -27,7 +28,7 @@ public class YogaApp {
     private JsonReader jsonReader;
 
     // EFFECTS: runs the yoga application
-    public YogaApp() throws FileNotFoundException {
+    public YogaApp() throws FileNotFoundException, InvalidEmailException {
         input = new Scanner(System.in);
         ourMembers = new MembershipList();
         jsonWriter = new JsonWriter(JSON_STORE);
@@ -37,7 +38,7 @@ public class YogaApp {
 
     // MODIFIES: this
     // EFFECTS: processes user input
-    private void runYogaApp() {
+    private void runYogaApp() throws InvalidEmailException {
         boolean keepGoing = true;
         String command = null;
 
@@ -60,7 +61,7 @@ public class YogaApp {
 
     // MODIFIES: this
     // EFFECTS: processes user command
-    private void processCommand(String command) {
+    private void processCommand(String command) throws InvalidEmailException {
         if (command.equals("a")) {
             doAddMember();
         } else if (command.equals("s")) {
@@ -82,7 +83,7 @@ public class YogaApp {
 
     // MODIFIES: this
     // EFFECTS: initializes memberships
-    private void init() {
+    private void init() throws InvalidEmailException {
         firstMember = new Member("Jenny Liu", "jennyjn@students.cs.ubc.ca",
                 true);
         ourMembers = new MembershipList();
@@ -105,7 +106,7 @@ public class YogaApp {
 
     // MODIFIES: this
     // EFFECTS: conducts addition of a member
-    private void doAddMember() {
+    private void doAddMember() throws InvalidEmailException {
         System.out.print("Enter name of member: ");
         String memberName = input.next();
         input.nextLine();
@@ -122,7 +123,8 @@ public class YogaApp {
             memberIsStudent = false;
         }
 
-        Member newMember = new Member(memberName, memberEmail, memberIsStudent);
+        Member newMember;
+        newMember = new Member(memberName, memberEmail, memberIsStudent);
         ourMembers.addMember(newMember);
         System.out.println("Member added.");
     }
@@ -194,7 +196,7 @@ public class YogaApp {
         try {
             ourMembers = jsonReader.read();
             System.out.println("Loaded membership list from " + JSON_STORE);
-        } catch (IOException e) {
+        } catch (IOException | InvalidEmailException e) {
             System.out.println("Unable to read from file: " + JSON_STORE);
         }
     }

@@ -1,5 +1,6 @@
 package persistence;
 
+import exception.InvalidEmailException;
 import model.Member;
 import model.MembershipList;
 
@@ -23,7 +24,7 @@ public class JsonReader {
 
     // EFFECTS: reads membership list from file and returns it;
     // throws IOException if an error occurs reading data from file
-    public MembershipList read() throws IOException {
+    public MembershipList read() throws IOException, InvalidEmailException {
         String jsonData = readFile(source);
         JSONObject jsonObject = new JSONObject(jsonData);
         return parseMembershipList(jsonObject);
@@ -41,7 +42,7 @@ public class JsonReader {
     }
 
     // EFFECTS: parses membership list from JSON object and returns it
-    private MembershipList parseMembershipList(JSONObject jsonObject) {
+    private MembershipList parseMembershipList(JSONObject jsonObject) throws InvalidEmailException {
         MembershipList ml = new MembershipList();
         addMembers(ml, jsonObject);
         return ml;
@@ -49,7 +50,7 @@ public class JsonReader {
 
     // MODIFIES: ml
     // EFFECTS: parses members from JSON object and adds them to membership list
-    private void addMembers(MembershipList ml, JSONObject jsonObject) {
+    private void addMembers(MembershipList ml, JSONObject jsonObject) throws InvalidEmailException {
         JSONArray jsonArray = jsonObject.getJSONArray("members");
         for (Object json : jsonArray) {
             JSONObject nextMember = (JSONObject) json;
@@ -59,7 +60,7 @@ public class JsonReader {
 
     // MODIFIES: ml
     // EFFECTS: parses member from JSON object and adds it to membership list
-    private void addMember(MembershipList ml, JSONObject jsonObject) {
+    private void addMember(MembershipList ml, JSONObject jsonObject) throws InvalidEmailException {
         String memberName = jsonObject.getString("memberName");
         String memberEmail = jsonObject.getString("memberEmail");
         Boolean memberStudent = jsonObject.getBoolean("memberStudent");

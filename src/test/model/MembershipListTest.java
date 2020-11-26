@@ -1,5 +1,6 @@
 package model;
 
+import exception.InvalidEmailException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,7 @@ class MembershipListTest {
     private MembershipList testMemberList;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws InvalidEmailException {
         stuMemberJenny = new Member("Jenny Liu",
                 "jennyjn@students.cs.ubc.ca",true);
         stuMemberKathy = new Member("Kathy Penelope",
@@ -79,7 +80,7 @@ class MembershipListTest {
     public void testDeleteIdSuccess() {
         testMemberList.addMember(stuMemberJenny);
         assertEquals(1, testMemberList.size());
-        testMemberList.deleteMember(100032);
+        testMemberList.deleteMember(100033);
         assertEquals(0, testMemberList.size());
     }
 
@@ -94,7 +95,7 @@ class MembershipListTest {
     @Test
     public void testFindMemberSuccess() {
         testMemberList.addMember(stuMemberJenny);
-        assertEquals("Jenny Liu", testMemberList.findMember(100041));
+        assertEquals("Jenny Liu", testMemberList.findMember(100029));
     }
 
     @Test

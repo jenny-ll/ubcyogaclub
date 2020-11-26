@@ -12,10 +12,12 @@ package ui;
 // https://docs.oracle.com/javase/tutorial/uiswing/examples/components/index.html
 // Simple Drawing Player example from class.
 
+import exception.InvalidEmailException;
 import model.Member;
 import model.MembershipList;
 import org.json.JSONObject;
 import org.omg.CORBA.Object;
+import persistence.JsonReader;
 import persistence.JsonWriter;
 import ui.tools.Tool;
 
@@ -58,10 +60,19 @@ public class YogaAppNew extends JPanel implements ActionListener {
     private MembershipList members;
     private Tool activeTool;
     private List<Tool> tools;
+    private ArrayList<Member> studentMembers;
+    private ArrayList<Member> nonStudentMembers;
+    private ArrayList<Member> allMembers;
 
     private JTable table;
     private Object[][] data;
     private JPanel panel;
+    private Integer addRowConstant;
+    private Boolean studentBoolean;
+    private java.lang.Object[] row;
+    private String nameText;
+    private String emailText;
+    private Integer memberID;
 
     private JTextField name;
     private JTextField email;
@@ -75,6 +86,7 @@ public class YogaAppNew extends JPanel implements ActionListener {
     private JsonWriter jsonWriter;
     private JFileChooser fileChooser;
     private String fileName;
+    private JsonReader jsonReader;
 
     private DefaultTableModel model;
 
@@ -103,7 +115,7 @@ public class YogaAppNew extends JPanel implements ActionListener {
 
     private void initializeFields() {
         activeTool = null;
-        currentMember = null;
+        members = new MembershipList();
         tools = new ArrayList<Tool>();
     }
 
@@ -188,51 +200,47 @@ public class YogaAppNew extends JPanel implements ActionListener {
         };
     }
 
-    // EFFECTS: Allows user to choose a file to save or open
-    //          (consider how to turn data into workable json file?)
-    //          turn each row into member objects, then use write method
-    //          use JsonWriter and JsonReader for saving and loading files
-    //          add Member to MembershipList additionally,
-
-    public void fileChooser() {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-        int result = fileChooser.showOpenDialog(this);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
-            System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-            fileName = fileChooser.getSelectedFile().getAbsolutePath();
-        }
-
+    public void initializeRow() {
+        addRowConstant = model.getRowCount() - 1;
+        studentBoolean = (Boolean) table.getValueAt(addRowConstant,3);
     }
 
-    // make sure to add member to membershiplist
+    public void getAddData() {
+        nameText = name.getText();
+        emailText = email.getText();
+        memberID = nextMemberID.incrementAndGet();
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        members = new MembershipList();
         if (e.getActionCommand().equals("click1")) {
-            String nameText = name.getText();
-            String emailText = email.getText();
-            Integer memberID = nextMemberID.incrementAndGet();
+            getAddData();
 
             java.lang.Object[] row = {memberID, nameText, emailText, true};
             model.addRow(row);
 
-            currentMember = new Member(nameText,emailText,true);
+            initializeRow();
+
+            try {
+                currentMember = new Member(nameText,emailText,studentBoolean);
+            } catch (InvalidEmailException invalidEmailException) {
+                invalidEmailException.printStackTrace();
+            }
             members.addMember(currentMember);
 
         } else if (e.getActionCommand().equals("click2")) {
             if (table.getSelectedRow() != -1) {
                 int rowConstant = table.getSelectedRow();
                 Integer memberID = (Integer) table.getValueAt(rowConstant,0);
-                // remove selected row from the model
+
                 model.removeRow(table.getSelectedRow());
                 // remove selected row from membership list
                 members.deleteMember(memberID);
             }
         } else if (e.getActionCommand().equals("saveClick")) {
             saveMembershipList();
+        } else if (e.getActionCommand().equals("openClick")) {
+            loadMembershipList();
         }
     }
 
@@ -249,6 +257,27 @@ public class YogaAppNew extends JPanel implements ActionListener {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: loads membership list from file
+    private void loadMembershipList() {
+        jsonReader = new JsonReader(JSON_STORE);
+        try {
+            members = jsonReader.read();
+            System.out.println("Loaded membership list from " + JSON_STORE);
+            studentMembers = members.showStudentMembers();
+            nonStudentMembers = members.showNonStudentMembers();
+            studentMembers.addAll(nonStudentMembers);
+            for (Member m : studentMembers) {
+                Integer memberID = m.getId();
+                String memberName = m.getName();
+                String memberEmail = m.getEmail();
+                java.lang.Object[] row = {memberID, memberName, memberEmail, true};
+                model.addRow(row);
+            }
+        } catch (IOException | InvalidEmailException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
+    }
 
     public void setActiveTool(Tool someTool) {
         if (activeTool != null) {

@@ -1,10 +1,12 @@
 package persistence;
 
+import exception.InvalidEmailException;
 import model.Member;
 import model.MembershipList;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,7 +40,7 @@ public class JsonWriterTest extends JsonTest {
             JsonReader reader = new JsonReader("./data/testWriterEmptyMembershipList.json");
             ml = reader.read();
             assertEquals(0, ml.size());
-        } catch (IOException e) {
+        } catch (IOException | InvalidEmailException e) {
             fail("Exception should not have been thrown");
         }
     }
@@ -47,8 +49,9 @@ public class JsonWriterTest extends JsonTest {
     void testWriterGeneralMembershipList() {
         try {
             MembershipList ml = new MembershipList();
-            ml.addMember(new Member("Spiderman", "spiderman@avengers.com",true));
-            ml.addMember(new Member("Ironman", "ironman@avengers.com",false));
+            for (Member member : Arrays.asList(new Member("Spiderman", "spiderman@avengers.com", true), new Member("Ironman", "ironman@avengers.com", false))) {
+                ml.addMember(member);
+            }
             JsonWriter writer = new JsonWriter("./data/testWriterGeneralMembershipList.json");
             writer.open();
             writer.write(ml);
@@ -61,7 +64,7 @@ public class JsonWriterTest extends JsonTest {
             checkMember("Ironman", "ironman@avengers.com",100002,members.get(1));
             assertEquals(2, members.size());
 
-        } catch (IOException e) {
+        } catch (IOException | InvalidEmailException e) {
             fail("Exception should not have been thrown");
         }
     }

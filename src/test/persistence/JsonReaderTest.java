@@ -1,5 +1,6 @@
 package persistence;
 
+import exception.InvalidEmailException;
 import model.MembershipList;
 import model.Member;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ public class JsonReaderTest extends JsonTest {
         try {
             MembershipList ml = reader.read();
             fail("IOException expected");
-        } catch (IOException e) {
+        } catch (IOException | InvalidEmailException e) {
             // pass
         }
     }
@@ -30,7 +31,7 @@ public class JsonReaderTest extends JsonTest {
         try {
             MembershipList ml = reader.read();
             assertEquals(0, ml.size());
-        } catch (IOException e) {
+        } catch (IOException | InvalidEmailException e) {
             fail("Couldn't read from file");
         }
     }
@@ -50,7 +51,7 @@ public class JsonReaderTest extends JsonTest {
                     100002, members.get(2));
             checkMember("Hagrid", "hagrid@hogwarts.com",
                     100003, members.get(3));
-        } catch (IOException e) {
+        } catch (IOException | InvalidEmailException e) {
             fail("Couldn't read from file");
         }
     }
